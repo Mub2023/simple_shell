@@ -88,6 +88,6 @@ c- The file should contain one command per line.
 
 d- In this mode, the shell should not print a prompt and should not read from stdin.
 
-                                     *** our team: mub2023 && richard579  *** 
+                                     *** our team: mub2023 && richard579  ***
 
                                       thats all thanks for checking our project.
