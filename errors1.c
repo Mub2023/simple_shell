@@ -96,7 +96,7 @@ char *convert_number(long int num, int base, int flags)
 
 	if (!(flags & CONVERT_UNSIGNED) && num < 0)
 	{
-		x = num;
+		x = -num;
 		si = '-';
 	}
 	arr = flags & CONVERT_LOWERCASE ? "0123456789abcdef" :
