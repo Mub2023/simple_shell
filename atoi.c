@@ -58,7 +58,7 @@ int _atoi(char *s)
 			f = 2;
 	}
 	if (si == -1)
-		output = result;
+		output = -result;
 	else
 		output = result;
 
