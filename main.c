@@ -20,7 +20,7 @@ int main(int ac, char **av)
 				if (fd == -1)
 				{
 					if (errno == EACCES)
-						exit(1260);
+						exit(126);
 					if (errno == ENOENT)
 					{
 						_eputs(av[0]);
@@ -34,6 +34,7 @@ int main(int ac, char **av)
 				}
 				info->readfd = fd;
 			}
+			populate_env_list(info);
 			read_history(info);
 			hsh(info, av);
 			return (EXIT_SUCCESS);
