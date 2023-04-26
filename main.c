@@ -1,40 +1,36 @@
-#include "shell.h"
+#include "general.h"
+#include "main.h"
 
 /**
- * main - implements a simple shell
- *
- * Return: EXIT_SUCCESS.
- */
-int main(void)
+ * main - Entry Point
+ * @argc: number of arguments received
+ * @argv: arguments received
+ * Return: 0
+ **/
+
+int main(int argc, char **argv)
 {
-	char *input;
-	char **args;
-	int status;
+	general_t *info;
+	int status_code;
 
-	/* Register signal handlers */
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
-	signal(SIGTSTP, handle_sigstp);
+	info = malloc(sizeof(general_t));
+	if (info == NULL)
+	{
+		perror(argv[0]);
+		exit(1);
+	}
 
-	do {
-		input = get_input();
-		if (!input || !*input)/* EOF detected, exit the loop */
-			break;
+	info->pid = getpid();
+	info->status_code = 0;
+	info->n_commands = 0;
+	info->argc = argc;
+	info->argv = argv;
+	info->mode = isatty(STDIN) == INTERACTIVE;
+	start(info);
 
-		args = tokenize_input(input);
-		if (!args || !*args)
-		{
-			free(input);
-			free_tokens(args);
-			continue;
-		}
-		status = execute(args);
-		free(input);
-		free_tokens(args);
+	status_code = info->status_code;
 
-		/* Set status to 1 to continue the loop */
-		status = 1;
-	} while (status);
+	free(info);
 
-	return (EXIT_SUCCESS);
+	return (status_code);
 }

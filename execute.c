@@ -1,50 +1,69 @@
-#include "shell.h"
+#include "commands.h"
+#include "general.h"
+#include "memory.h"
 
 /**
- * execute - Execute a command with arguments.
- * @argv: An array of strings containing the command and its arguments.
+ * execute - Execute a command in other process
  *
- * Return: The exit status of the executed command.
- */
-int execute(char **argv)
+ * @command: Command to execute
+ * @arguments: Arguments of the @command
+ * @info: General info about the shell
+ * @buff: Line readed
+ **/
+void execute(char *command, char **arguments, general_t *info, char *buff)
 {
-	pid_t id;
-	int status = 0;
-	char *cmd_path, *envp[2];
+	int status;
+	pid_t pid;
 
-	if (argv == NULL || *argv == NULL)
-		return (status);
-	if (check_for_builtin(argv))
-		return (status);
+	pid = fork();
+	if (pid == 0)
+	{
+		execve(command, arguments, environ);
+		perror("./sh");
 
-	id = fork();
-	if (id < 0)
-	{
-		_puterror("fork");
-		return (1);
-	}
-	if (id == -1)
-		perror(argv[0]), free_tokens(argv), free_last_input();
-	if (id == 0)
-	{
-		envp[0] = get_path();
-		envp[1] = NULL;
-		cmd_path = NULL;
-		if (argv[0][0] != '/')
-			cmd_path = find_in_path(argv[0]);
-		if (cmd_path == NULL)
-			cmd_path = argv[0];
-		if (execve(cmd_path, argv, envp) == -1)
+		free_memory_pp((void *) arguments);
+
+		if (info->value_path != NULL)
 		{
-			perror(argv[0]), free_tokens(argv), free_last_input();
-			exit(EXIT_FAILURE);
+			free(info->value_path);
+			info->value_path = NULL;
 		}
+
+		free(info);
+		free(buff);
+		exit(1);
 	}
-	else
+	else if (pid > 0)
 	{
-		do {
-			waitpid(id, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			info->status_code = WEXITSTATUS(status);
 	}
-	return (status);
 }
+
+
+/**
+ * current_directory - Execute the command if the order require
+ *
+ * @cmd: Command to execute
+ * @arguments: Arguments of the @cmd
+ * @buff: Line readed
+ * @info: General info about the shell
+ *
+ * Return: Status of the operations
+ **/
+int current_directory(char *cmd, char **arguments, char *buff, general_t *info)
+{
+
+	if (info->is_current_path == _FALSE)
+		return (_FALSE);
+
+	if (is_executable(cmd) == PERMISSIONS)
+	{
+		execute(cmd, arguments, info, buff);
+		return (_TRUE);
+	}
+
+	return (_FALSE);
+}
+
