@@ -21,8 +21,6 @@ void expand_vars(info_t *info, char ***tokptr)
 	free(tokens);
 	*tokptr = new;
 }
-
-
 /**
  * _expand_vars - perform variable expansion on a token
  * @info: shell information
@@ -89,15 +87,12 @@ char **_expand_vars(info_t *info, char ***tokptr)
 		{
 			while (_isident(tok[pos + var_len + 1]))
 				++var_len;
-
 			var = _strndup(tok + pos + 1, var_len);
 			val = get_dict_val(info->env, var);
-
 			if (val)
 				val = _strdup(val);
 			else
 				val = _strdup("");
-
 			free(var);
 			var = NULL;
 		}
@@ -110,10 +105,8 @@ char **_expand_vars(info_t *info, char ***tokptr)
 			_memcpy(**tokptr, tok, pos);
 			_memcpy(**tokptr + pos, val, val_len);
 			_strcpy(**tokptr + pos + val_len, tok + pos + var_len + 1);
-
 			free(tok);
 			tok = **tokptr;
-
 			free(val);
 			val = NULL;
 		}
