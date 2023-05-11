@@ -9,6 +9,10 @@
 #include <signal.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stddef.h>
 
 #include "alias.h"
 #include "builtins.h"
@@ -16,7 +20,6 @@
 #include "ctype.h"
 #include "dict.h"
 #include "env.h"
-#include "error.h"
 #include "info.h"
 #include "list.h"
 #include "path.h"
@@ -47,4 +50,9 @@ void open_script(info_t *info);
 
 void _sigint(int signal);
 
-#endif /* SHELL_H */
+void perrorl(const char *msg, ...);
+
+void perrorl_default(const char *arg0, size_t lineno, const char *msg, ...);
+
+
+#endif 

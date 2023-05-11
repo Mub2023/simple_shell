@@ -74,4 +74,4 @@ void free_cmdlist(cmdlist_t **headptr);
 cmdtree_t *cmd_to_tree(const char * const *tokens);
 void free_cmdtree(cmdtree_t **rootptr);
 
-#endif /* _COMMAND_H_ */
+#endif

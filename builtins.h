@@ -7,7 +7,7 @@
 
 #include "alias.h"
 #include "env.h"
-#include "error.h"
+#include "hsh.h"
 #include "info.h"
 #include "path.h"
 #include "string.h"

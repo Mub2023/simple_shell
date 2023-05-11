@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include "string.h"
 #include "types.h"
+#include "dict.h"
+#include "types.h"
+
 
 /**
  * struct list - singly linked list
@@ -22,4 +25,6 @@ list_t *add_node(list_t **headptr, const char *str);
 list_t *add_node_end(list_t **headptr, const char *str);
 void free_list(list_t **headptr);
 
-#endif /* LIST_H */
+
+
+#endif
